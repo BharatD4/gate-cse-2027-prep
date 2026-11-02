@@ -1,0 +1,286 @@
+/* Modern Dark Theme & Glassmorphism Styles for GATE CSE Prep */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary: #8b5cf6;
+  --accent: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --bg-dark: #090d16;
+  --bg-card: rgba(18, 24, 38, 0.75);
+  --border-card: rgba(255, 255, 255, 0.08);
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glassmorphism Card Effect */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-card);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 1rem;
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.glass-subtle {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+::-webkit-scrollbar-thumb {
+  background: #232d42;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Tab Active Styles */
+.nav-tab.active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(139, 92, 246, 0.25));
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Progress Bar Shimmer */
+.progress-shimmer {
+  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Timer Pulse Glow */
+.timer-running {
+  box-shadow: 0 0 35px rgba(59, 130, 246, 0.45);
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+}
+
+/* Badge Glows */
+.badge-tier-1 {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.badge-tier-2 {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  color: #60a5fa;
+}
+
+.badge-tier-3 {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+/* Print Friendly formatting */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .glass-panel {
+    background: transparent !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    color: #000 !important;
+  }
+}
+
+/* =========================================
+   Mobile-First & PWA-Specific Additions
+   ========================================= */
+
+/* iOS Safe Area support */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Prevent text selection on buttons (mobile touch) */
+button, .nav-tab {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Smooth momentum scrolling for mobile */
+.tab-content, main {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Touch targets: make buttons easier to tap on mobile */
+@media (max-width: 768px) {
+  .nav-tab {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  /* Scroll nav tabs horizontally */
+  nav .flex.overflow-x-auto {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+  }
+  nav .flex.overflow-x-auto::-webkit-scrollbar {
+    display: none;
+  }
+  nav .flex.overflow-x-auto > * {
+    scroll-snap-align: start;
+  }
+
+  /* Reduce padding on mobile */
+  main {
+    padding: 12px !important;
+  }
+
+  .glass-panel {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Stack header elements vertically on mobile */
+  header .max-w-7xl {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  /* Full width filter selects on small screens */
+  select, input[type="text"], input[type="number"] {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  /* Countdown compact on mobile */
+  .font-mono .bg-black\/40 {
+    padding: 4px 6px;
+  }
+
+  /* Make questions scroll properly */
+  pre {
+    font-size: 11px;
+    overflow-x: auto;
+    max-width: calc(100vw - 80px);
+  }
+
+  /* Pomodoro timer bigger on mobile */
+  #pomo-time-display {
+    font-size: 3.5rem !important;
+  }
+
+  /* Simulator sliders bigger touch target */
+  input[type="range"] {
+    height: 8px;
+  }
+}
+
+/* Very small screens (iPhone SE, etc.) */
+@media (max-width: 380px) {
+  .nav-tab {
+    padding: 8px 8px;
+    font-size: 10px;
+  }
+
+  h1 {
+    font-size: 14px !important;
+  }
+
+  .glass-panel {
+    padding: 12px;
+  }
+}
+
+/* PWA standalone mode: remove address bar-specific UI clutter */
+@media (display-mode: standalone) {
+  .no-print {
+    /* Keep utils visible in standalone */
+  }
+
+  /* Extra top padding when standalone (no address bar) */
+  header {
+    padding-top: env(safe-area-inset-top, 8px);
+  }
+}
+
+/* Landscape mobile: reduce header height */
+@media (max-height: 500px) and (orientation: landscape) {
+  header {
+    padding: 4px 16px;
+  }
+
+  nav {
+    padding: 2px 16px;
+  }
+}
+
+/* Dark mode link colors for better mobile contrast */
+a {
+  -webkit-tap-highlight-color: rgba(59, 130, 246, 0.2);
+}
+
+/* Prevent body scroll when modal is open on mobile */
+body.modal-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+/* Install banner slide-up animation */
+#pwa-install-banner {
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

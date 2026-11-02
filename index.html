@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>GATE CSE 2027 | 3-Month "Mission Qualify" Web App</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="description" content="3-Month GATE CSE 2027 Qualifying Web App: 90-Day Roadmap, Formula Vault, PYQ Engine, Mistake Notebook & Pomodoro Timer" />
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="GATE Prep" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="GATE CSE 2027 Prep" />
+  <meta name="msapplication-TileColor" content="#3b82f6" />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.svg" />
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.svg" />
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.svg" />
+  <link rel="icon" type="image/svg+xml" href="icons/icon-192.svg" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body class="text-slate-100 flex flex-col min-h-screen">
+
+  <!-- ================= TOP HEADER BAR ================= -->
+  <header class="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-white/10 px-4 lg:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Brand & Mission Tag -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 text-white font-black text-xl">
+          G
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-extrabold tracking-tight text-white">GATE CSE 2027</h1>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              3-Month Sprint Mode
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">Target: Qualify with 45+ Marks & High-ROI Strategy</p>
+        </div>
+      </div>
+
+      <!-- Live GATE Countdown -->
+      <div class="flex items-center gap-2 bg-slate-900/90 border border-white/10 px-4 py-2 rounded-2xl shadow-inner">
+        <span class="text-xs text-slate-400 font-medium flex items-center gap-1.5 mr-1">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-blue-400 animate-pulse"></i> Exam Countdown:
+        </span>
+        <div class="flex items-center gap-1.5 font-mono text-xs font-bold text-white">
+          <div class="bg-black/40 px-2 py-1 rounded-lg border border-white/5"><span id="countdown-days">00</span><span class="text-[9px] text-slate-400 block font-sans">Days</span></div>
+          <span>:</span>
+          <div class="bg-black/40 px-2 py-1 rounded-lg border border-white/5"><span id="countdown-hours">00</span><span class="text-[9px] text-slate-400 block font-sans">Hrs</span></div>
+          <span>:</span>
+          <div class="bg-black/40 px-2 py-1 rounded-lg border border-white/5"><span id="countdown-mins">00</span><span class="text-[9px] text-slate-400 block font-sans">Min</span></div>
+          <span>:</span>
+          <div class="bg-black/40 px-2 py-1 rounded-lg border border-white/5 text-amber-400"><span id="countdown-secs">00</span><span class="text-[9px] text-slate-400 block font-sans">Sec</span></div>
+        </div>
+      </div>
+
+      <!-- Utility Actions -->
+      <div class="flex items-center gap-2 no-print">
+        <button onclick="window.exportAllData()" 
+                class="px-3 py-1.5 rounded-xl glass-subtle hover:bg-white/10 text-xs font-medium text-slate-300 flex items-center gap-1.5 transition-colors"
+                title="Backup your progress and mistake notebook as JSON">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i> Backup
+        </button>
+
+        <label class="px-3 py-1.5 rounded-xl glass-subtle hover:bg-white/10 text-xs font-medium text-slate-300 flex items-center gap-1.5 cursor-pointer transition-colors"
+               title="Restore your saved JSON backup">
+          <i data-lucide="upload" class="w-3.5 h-3.5"></i> Restore
+          <input type="file" accept=".json" onchange="window.importAllData(event)" class="hidden" />
+        </label>
+
+        <button onclick="window.print()" 
+                class="px-3 py-1.5 rounded-xl glass-subtle hover:bg-white/10 text-xs font-medium text-slate-300 flex items-center gap-1.5 transition-colors"
+                title="Print current page / Save as PDF">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i> Print
+        </button>
+
+        <button onclick="window.resetAllData()" 
+                class="p-2 rounded-xl glass-subtle hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition-colors"
+                title="Reset all progress">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= NAVIGATION TABS ================= -->
+  <nav class="sticky top-[73px] z-30 bg-slate-950/70 backdrop-blur-md border-b border-white/5 px-4 lg:px-8 py-2 no-print">
+    <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto py-1">
+      <button onclick="window.switchTab('dashboard')" data-tab="dashboard" 
+              class="nav-tab active px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Command Center
+      </button>
+
+      <button onclick="window.switchTab('roadmap')" data-tab="roadmap" 
+              class="nav-tab px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white">
+        <i data-lucide="calendar" class="w-4 h-4"></i> 90-Day Roadmap
+      </button>
+
+      <button onclick="window.switchTab('syllabus')" data-tab="syllabus" 
+              class="nav-tab px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white">
+        <i data-lucide="layers" class="w-4 h-4"></i> Priority Tiers & Weightage
+      </button>
+
+      <button onclick="window.switchTab('cheatsheet')" data-tab="cheatsheet" 
+              class="nav-tab px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white">
+        <i data-lucide="file-text" class="w-4 h-4"></i> Formula Vault & Tables
+      </button>
+
+      <button onclick="window.switchTab('pyqs')" data-tab="pyqs" 
+              class="nav-tab px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white">
+        <i data-lucide="award" class="w-4 h-4"></i> PYQ & Mock Simulator
+      </button>
+
+      <button onclick="window.switchTab('errorlog')" data-tab="errorlog" 
+              class="nav-tab px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white">
+        <i data-lucide="book-marked" class="w-4 h-4"></i> Mistake Notebook
+      </button>
+
+      <button onclick="window.switchTab('blueprint')" data-tab="blueprint" 
+              class="nav-tab px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white">
+        <i data-lucide="compass" class="w-4 h-4"></i> 3-Month Strategy & Free Videos
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-6">
+
+    <!-- TAB 1: COMMAND CENTER (DASHBOARD) -->
+    <div id="tab-dashboard" class="tab-content space-y-6">
+      
+      <!-- Top Row: Quick Metrics & Today's Target -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Overall Readiness Card -->
+        <div class="glass-panel p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">90-Day Sprint Readiness</span>
+              <span class="text-xs font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-500/20" id="dash-completed-count">
+                0 / 90 Days
+              </span>
+            </div>
+            <div class="flex items-baseline gap-3">
+              <span class="text-4xl font-extrabold text-white" id="dash-progress-pct">0%</span>
+              <span class="text-xs text-slate-400">Preparation Completed</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-3 mt-4 overflow-hidden p-0.5 border border-white/5">
+              <div id="dash-progress-bar" class="progress-shimmer h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/10 grid grid-cols-2 gap-4 text-center">
+            <div class="glass-subtle p-3 rounded-xl">
+              <span class="text-xs text-slate-400 block">Streak</span>
+              <span class="text-sm font-bold text-emerald-400" id="dash-streak-count">0 Days</span>
+            </div>
+            <div class="glass-subtle p-3 rounded-xl">
+              <span class="text-xs text-slate-400 block">Focus Time</span>
+              <span class="text-sm font-bold text-purple-400" id="dash-pomo-total">0 hrs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Integrated Pomodoro Focus Card -->
+        <div class="glass-panel p-6 flex flex-col justify-between" id="pomo-card">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i data-lucide="flame" class="w-4 h-4 text-amber-400"></i>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400" id="pomo-mode-label">Deep Work Session</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button onclick="window.setPomodoroDuration(25, 'work')" class="px-2 py-1 rounded text-[11px] font-semibold bg-white/5 hover:bg-white/10 text-slate-300">25m</button>
+              <button onclick="window.setPomodoroDuration(50, 'work')" class="px-2 py-1 rounded text-[11px] font-semibold bg-white/5 hover:bg-white/10 text-slate-300">50m</button>
+              <button onclick="window.setPomodoroDuration(5, 'break')" class="px-2 py-1 rounded text-[11px] font-semibold bg-white/5 hover:bg-white/10 text-slate-300">5m Break</button>
+            </div>
+          </div>
+
+          <div class="text-center my-4">
+            <div class="text-5xl font-mono font-black tracking-tight text-white" id="pomo-time-display">25:00</div>
+            <p class="text-[11px] text-slate-400 mt-1">Single-task focus: No social media, just GATE questions</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="window.togglePomodoro()" id="pomo-toggle-btn"
+                    class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 transition-all">
+              <i data-lucide="play" class="w-4 h-4"></i> Start Focus
+            </button>
+            <button onclick="window.resetPomodoro()" 
+                    class="px-4 py-2.5 rounded-xl font-semibold text-xs glass-subtle hover:bg-white/10 text-slate-300 flex items-center justify-center transition-colors">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Target Qualifying Simulator Card -->
+        <div class="glass-panel p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Qualifying Simulator</span>
+              <span id="simulator-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                Safe Target: 44 M
+              </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-4xl font-black text-emerald-400" id="simulator-total-score">44</span>
+              <span class="text-xs text-slate-400">/ 100 Projected Marks</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-2" id="simulator-status-desc">
+              Clears qualifying cutoff (~25-28) by a +16 mark safe buffer!
+            </p>
+            <div class="w-full bg-slate-800 rounded-full h-2 mt-3 overflow-hidden">
+              <div id="simulator-cutoff-bar" class="h-full bg-gradient-to-r from-blue-500 to-emerald-400 rounded-full" style="width: 75%"></div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Gen Cutoff: ~25-28</span>
+            <span>OBC Cutoff: ~23-25</span>
+            <span>SC/ST: ~16-18</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Today's Mission Detailed Banner -->
+      <div class="glass-panel p-6" id="dash-today-mission">
+        <!-- Rendered dynamically via JS -->
+      </div>
+
+      <!-- Target Marks Customizer (Accordion / Controls) -->
+      <div class="glass-panel p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-blue-400"></i> Subject-wise Score Target Customizer
+            </h3>
+            <p class="text-xs text-slate-400">Adjust how many marks you plan to secure from each subject to hit your 45+ qualification shield</p>
+          </div>
+          <button onclick="window.switchTab('syllabus')" class="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1">
+            View Syllabus Breakdown <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" id="marks-simulator-controls">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: 90-DAY SPRINT ROADMAP -->
+    <div id="tab-roadmap" class="tab-content hidden space-y-6">
+      
+      <!-- Roadmap Filters Header -->
+      <div class="glass-panel p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="calendar" class="w-5 h-5 text-blue-400"></i> 90-Day Step-by-Step Action Plan
+          </h2>
+          <p class="text-xs text-slate-400" id="roadmap-filter-count">Showing 90 of 90 Days</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <!-- Phase Select -->
+          <select onchange="window.filterRoadmap('phase', this.value)" 
+                  class="bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="all">All Phases</option>
+            <option value="1">Phase 1: Foundation (Days 1-30)</option>
+            <option value="2">Phase 2: Core CS (Days 31-60)</option>
+            <option value="3">Phase 3: PYQ Marathon & Mocks (Days 61-90)</option>
+          </select>
+
+          <!-- Subject Select -->
+          <select id="roadmap-subject-select" onchange="window.filterRoadmap('subject', this.value)" 
+                  class="bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="all">All Subjects</option>
+          </select>
+
+          <!-- Status Select -->
+          <select onchange="window.filterRoadmap('status', this.value)" 
+                  class="bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="all">All Status</option>
+            <option value="pending">Pending Only</option>
+            <option value="completed">Completed Only</option>
+          </select>
+
+          <!-- Search Input -->
+          <div class="relative flex-1 sm:w-48">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3"></i>
+            <input type="text" placeholder="Search topics..." oninput="window.filterRoadmap('search', this.value)"
+                   class="w-full bg-slate-900 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Roadmap Cards Container -->
+      <div class="space-y-4" id="roadmap-cards-list">
+        <!-- Rendered by JS -->
+      </div>
+
+    </div>
+
+    <!-- TAB 3: SYLLABUS & PRIORITY TIERS -->
+    <div id="tab-syllabus" class="tab-content hidden space-y-6">
+      
+      <!-- Tier Overview Banner -->
+      <div class="glass-panel p-6">
+        <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+          <i data-lucide="layers" class="w-5 h-5 text-emerald-400"></i> The 3-Tier Qualification Matrix
+        </h2>
+        <p class="text-xs text-slate-300 leading-relaxed max-w-4xl">
+          Bhai 3 mahine me 100% syllabus cover karne ki galti mat karna. Humne poore GATE CSE syllabus ko 3 Tiers me classify kiya hai:
+          <br />
+          • <strong class="text-emerald-400">Tier 1 (High ROI - 45+ Marks):</strong> General Aptitude, Discrete Math, C & DS, TOC, OS, DBMS. Inhe 100% master karo.
+          <br />
+          • <strong class="text-blue-400">Tier 2 (Selective Scoring - 25+ Marks):</strong> Algorithms standard problems, Linear Algebra shortcuts, Digital Logic.
+          <br />
+          • <strong class="text-amber-400">Tier 3 (Cherry-Pick - 15 Marks):</strong> Computer Networks (only Subnetting/Sliding Window), COA (only Cache/Pipelining), Compiler Design (only Tokens/First-Follow). Baaki skip karo!
+        </p>
+      </div>
+
+      <div class="space-y-6" id="syllabus-cards-container">
+        <!-- Rendered by JS -->
+      </div>
+
+    </div>
+
+    <!-- TAB 4: REVISION VAULT & CHEAT SHEETS -->
+    <div id="tab-cheatsheet" class="tab-content hidden space-y-6">
+      
+      <div class="glass-panel p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="file-text" class="w-5 h-5 text-purple-400"></i> Formula Vault & High-Yield Tables
+          </h2>
+          <p class="text-xs text-slate-400">TOC Decidability, Closure Properties, OS EMAT, Sorting Complexity, and Math Shortcuts</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <select onchange="window.filterCheatsheet('subject', this.value)" 
+                  class="bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="all">All Subjects</option>
+            <option value="TOC">Theory of Computation</option>
+            <option value="OS">Operating Systems</option>
+            <option value="DBMS">Databases (DBMS)</option>
+            <option value="Algorithms">Algorithms & DS</option>
+            <option value="Discrete Math">Discrete Mathematics</option>
+            <option value="Networks">Computer Networks</option>
+            <option value="COA">Computer Organization</option>
+            <option value="Math">Engineering Math</option>
+          </select>
+
+          <div class="relative w-full sm:w-64">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3"></i>
+            <input type="text" placeholder="Search formula (e.g. EMAT, Euler)..." oninput="window.filterCheatsheet('search', this.value)"
+                   class="w-full bg-slate-900 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500" />
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6" id="cheatsheet-cards-container">
+        <!-- Rendered by JS -->
+      </div>
+
+    </div>
+
+    <!-- TAB 5: PYQ & MOCK TEST SIMULATOR -->
+    <div id="tab-pyqs" class="tab-content hidden space-y-6">
+      
+      <div class="glass-panel p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="award" class="w-5 h-5 text-amber-400"></i> Authentic GATE CSE Practice & Quiz Engine
+          </h2>
+          <p class="text-xs text-slate-400">Solve real GATE questions (MCQ, MSQ, NAT) with negative marking and instant trap detection</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div id="pyq-score-summary">
+            <!-- Rendered by JS -->
+          </div>
+          <select onchange="window.filterQuizSubject(this.value)" 
+                  class="bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="all">All Subjects</option>
+            <option value="Programming in C">Programming in C</option>
+            <option value="Data Structures">Data Structures</option>
+            <option value="Theory of Computation">Theory of Computation</option>
+            <option value="Operating Systems">Operating Systems</option>
+            <option value="Databases (DBMS)">Databases (DBMS)</option>
+            <option value="General Aptitude">General Aptitude</option>
+            <option value="Discrete Mathematics">Discrete Mathematics</option>
+            <option value="Algorithms">Algorithms</option>
+            <option value="Digital Logic">Digital Logic</option>
+            <option value="Computer Networks (Selective)">Computer Networks</option>
+            <option value="Engineering Mathematics">Engineering Mathematics</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="space-y-6" id="pyq-questions-container">
+        <!-- Rendered by JS -->
+      </div>
+
+    </div>
+
+    <!-- TAB 6: MISTAKE NOTEBOOK (ERROR LOG) -->
+    <div id="tab-errorlog" class="tab-content hidden space-y-6">
+      
+      <div class="glass-panel p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="book-marked" class="w-5 h-5 text-rose-400"></i> Personal Mistake Notebook (Error Log)
+          </h2>
+          <p class="text-xs text-slate-400" id="error-log-count">0 Mistakes Recorded</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <select onchange="window.filterErrorLog(this.value)" 
+                  class="bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="all">All Mistake Types</option>
+            <option value="Calculation Error">Calculation Error</option>
+            <option value="Conceptual Gap">Conceptual Gap</option>
+            <option value="Misread Question">Misread Question</option>
+            <option value="Formula Forgot">Formula Forgot</option>
+          </select>
+
+          <button onclick="window.openAddMistakeModal()" 
+                  class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs flex items-center gap-2 shadow-lg shadow-blue-500/25">
+            <i data-lucide="plus" class="w-4 h-4"></i> Log Mistake
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-4" id="error-log-cards-container">
+        <!-- Rendered by JS -->
+      </div>
+
+    </div>
+
+    <!-- TAB 7: STRATEGY BLUEPRINT & RESOURCES -->
+    <div id="tab-blueprint" class="tab-content hidden space-y-6">
+      <div id="blueprint-content-container">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= ADD MISTAKE MODAL ================= -->
+  <div id="add-mistake-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel p-6 max-w-lg w-full space-y-4 border border-white/20">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-rose-400"></i> Add Question to Mistake Notebook
+        </h3>
+        <button onclick="window.closeAddMistakeModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Subject</label>
+          <select id="mistake-sub-input" class="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-slate-200">
+            <option value="General Aptitude">General Aptitude</option>
+            <option value="Discrete Mathematics">Discrete Mathematics</option>
+            <option value="Programming in C">Programming in C</option>
+            <option value="Data Structures">Data Structures</option>
+            <option value="Theory of Computation">Theory of Computation</option>
+            <option value="Operating Systems">Operating Systems</option>
+            <option value="Databases (DBMS)">Databases (DBMS)</option>
+            <option value="Algorithms">Algorithms</option>
+            <option value="Digital Logic">Digital Logic</option>
+            <option value="Computer Networks">Computer Networks</option>
+            <option value="COA">COA</option>
+            <option value="Engineering Mathematics">Engineering Mathematics</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Topic / Year</label>
+          <input type="text" id="mistake-topic-input" placeholder="e.g. GATE 2022 Pointers Arithmetic" 
+                 class="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-slate-200" />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Mistake Category</label>
+          <select id="mistake-type-input" class="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-slate-200">
+            <option value="Conceptual Gap">Conceptual Gap</option>
+            <option value="Calculation Error">Calculation Error</option>
+            <option value="Misread Question">Misread Question</option>
+            <option value="Formula Forgot">Formula Forgot</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">What went wrong in the question?</label>
+          <textarea id="mistake-q-input" rows="2" placeholder="Briefly describe the question or expression..." 
+                    class="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-slate-200"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Action Plan / Learning (How to never repeat this):</label>
+          <textarea id="mistake-plan-input" rows="2" placeholder="e.g. Always check if pointer is incremented before or after dereference..." 
+                    class="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-slate-200"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+        <button onclick="window.closeAddMistakeModal()" class="px-4 py-2 rounded-xl glass-subtle text-xs text-slate-300 hover:bg-white/10">
+          Cancel
+        </button>
+        <button onclick="window.saveCustomMistake()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-lg shadow-blue-500/25">
+          Save in Notebook
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-slate-950 border-t border-white/10 py-6 px-4 text-center text-xs text-slate-400 no-print">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>
+        🎯 <strong>Remember:</strong> Qualifying GATE requires consistency over perfection. 25 solid questions = Qualified!
+      </p>
+      <div class="flex items-center gap-4">
+        <a href="https://gateoverflow.in" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">GATE Overflow</a>
+        <span>•</span>
+        <a href="https://www.youtube.com/c/GateSmashers" target="_blank" rel="noopener noreferrer" class="text-rose-400 hover:underline">Gate Smashers</a>
+        <span>•</span>
+        <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="text-slate-300 hover:text-white">Back to Top ↑</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PWA Install Banner (Mobile) -->
+  <div id="pwa-install-banner" class="hidden fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 text-white px-4 py-3.5 shadow-2xl safe-area-bottom no-print">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl font-black shrink-0">G</div>
+        <div>
+          <p class="text-sm font-bold">📲 Install GATE Prep App</p>
+          <p class="text-xs opacity-80">Home screen pe add karo — offline bhi chalega!</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="window.installPWA()" id="pwa-install-btn"
+                class="px-4 py-2 rounded-xl bg-white text-indigo-700 font-bold text-xs shadow-lg hover:bg-slate-100 transition-colors">
+          Install App
+        </button>
+        <button onclick="window.dismissInstallBanner()" 
+                class="p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10">
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offline Status Indicator -->
+  <div id="offline-indicator" class="hidden fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-amber-600 text-white text-xs font-semibold shadow-lg flex items-center gap-2 no-print">
+    <span class="w-2 h-2 rounded-full bg-amber-300 animate-pulse"></span>
+    Offline Mode — Saved data available
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data/roadmapData.js"></script>
+  <script src="js/data/syllabusData.js"></script>
+  <script src="js/data/cheatSheetsData.js"></script>
+  <script src="js/data/pyqQuestionsData.js"></script>
+  <script src="js/data/resourcesData.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Service Worker & PWA Install Logic -->
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => {
+            console.log('[PWA] Service Worker registered:', reg.scope);
+          })
+          .catch((err) => {
+            console.log('[PWA] Service Worker registration failed:', err);
+          });
+      });
+    }
+
+    // PWA Install Prompt
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show custom install banner
+      const banner = document.getElementById('pwa-install-banner');
+      const dismissed = localStorage.getItem('gate27_pwa_dismissed');
+      if (banner && !dismissed) {
+        banner.classList.remove('hidden');
+      }
+    });
+
+    window.installPWA = function () {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('[PWA] User accepted install');
+            if (window.showToast) window.showToast('🎉 App install ho gaya! Home screen check karo!', 'success');
+          }
+          deferredPrompt = null;
+          const banner = document.getElementById('pwa-install-banner');
+          if (banner) banner.classList.add('hidden');
+        });
+      }
+    };
+
+    window.dismissInstallBanner = function () {
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.classList.add('hidden');
+      localStorage.setItem('gate27_pwa_dismissed', 'true');
+    };
+
+    // Offline / Online detection
+    function updateOnlineStatus() {
+      const indicator = document.getElementById('offline-indicator');
+      if (!indicator) return;
+      if (!navigator.onLine) {
+        indicator.classList.remove('hidden');
+      } else {
+        indicator.classList.add('hidden');
+      }
+    }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+
+    // Handle hash-based navigation from PWA shortcuts
+    window.addEventListener('load', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && typeof window.switchTab === 'function') {
+        window.switchTab(hash);
+      }
+    });
+  </script>
+</body>
+</html>
+

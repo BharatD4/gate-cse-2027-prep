@@ -1,0 +1,13 @@
+{
+  "name": "gate-cse-prep-app",
+  "version": "1.0.0",
+  "description": "GATE CSE 2027 3-Month Sprint & Qualifying Prep Web App",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "serve": "python -m http.server 3000"
+  },
+  "keywords": ["gate", "cse", "gate-2027", "study-planner", "qualify-gate"],
+  "author": "Antigravity",
+  "license": "MIT"
+}
+
